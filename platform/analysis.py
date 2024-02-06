@@ -37,5 +37,4 @@ class Analysis:
     def __init__(self, msg: dict):
         self.inputSection = getSection(msg['inputRange'], msg['inputData'])
         self.outputSection = getSection(msg['outputRange'], msg['outputData'])
-
         pass
