@@ -16,4 +16,4 @@ class LLM_NPU(LLM):
         super().__init__()
 
     def getContext(self):
-        super().getContext()
+        return Context_NPU()
