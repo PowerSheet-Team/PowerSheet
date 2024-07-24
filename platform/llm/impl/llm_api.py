@@ -44,7 +44,7 @@ class LLM_API(LLM):
     def __init__(self):
         super().__init__()
         self.client = OpenAI(
-            api_key="",
+            api_key="sk-wGOzmydo7eSA3DnihxDksTWwllymhDyzp58q7mVQDmYCrhnN",
             base_url="https://api.moonshot.cn/v1",
         )
         self.system_messages = [

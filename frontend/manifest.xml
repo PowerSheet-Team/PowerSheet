@@ -30,7 +30,7 @@
           </GetStarted>
           <FunctionFile resid="Commands.Url"/>
           <ExtensionPoint xsi:type="PrimaryCommandSurface">
-            <OfficeTab id="TabHome">
+            <!-- <OfficeTab id="TabHome">
               <Group id="CommandsGroup">
                 <Label resid="CommandsGroup.Label"/>
                 <Icon>
@@ -38,11 +38,11 @@
                   <bt:Image size="32" resid="Icon.32x32"/>
                   <bt:Image size="80" resid="Icon.80x80"/>
                 </Icon>
-                <Control xsi:type="Button" id="TaskpaneButton">
-                  <Label resid="TaskpaneButton.Label"/>
+                <Control xsi:type="Button" id="AIFillButton">
+                  <Label resid="AIFillButton.Label"/>
                   <Supertip>
-                    <Title resid="TaskpaneButton.Label"/>
-                    <Description resid="TaskpaneButton.Tooltip"/>
+                    <Title resid="AIFillButton.Label"/>
+                    <Description resid="AIFillButton.Tooltip"/>
                   </Supertip>
                   <Icon>
                     <bt:Image size="16" resid="Icon.16x16"/>
@@ -55,7 +55,114 @@
                   </Action>
                 </Control>
               </Group>
-            </OfficeTab>
+            </OfficeTab> -->
+            <CustomTab id="TabPowerSheet">
+            <Label resid="CustomTab.Label" />
+              <Group id="CommandsGroup">
+                <Label resid="CommandsGroup.Label"/>
+                <Icon>
+                  <bt:Image size="16" resid="Icon.16x16"/>
+                  <bt:Image size="32" resid="Icon.32x32"/>
+                  <bt:Image size="80" resid="Icon.80x80"/>
+                </Icon>
+                <Control xsi:type="Button" id="AIFillButton">
+                  <Label resid="AIFillButton.Label"/>
+                  <Supertip>
+                    <Title resid="AIFillButton.Label"/>
+                    <Description resid="AIFillButton.Tooltip"/>
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="Icon.16x16"/>
+                    <bt:Image size="32" resid="Icon.32x32"/>
+                    <bt:Image size="80" resid="Icon.80x80"/>
+                  </Icon>
+                  <Action xsi:type="ShowTaskpane">
+                    <TaskpaneId>ButtonId1</TaskpaneId>
+                    <SourceLocation resid="Taskpane.Url"/>
+                  </Action>
+                </Control>
+                <Control xsi:type="Button" id="AIRewriteButton">
+                  <Label resid="AIRewriteButton.Label"/>
+                  <Supertip>
+                    <Title resid="AIRewriteButton.Label"/>
+                    <Description resid="AIRewriteButton.Tooltip"/>
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="Icon.16x16"/>
+                    <bt:Image size="32" resid="Icon.32x32"/>
+                    <bt:Image size="80" resid="Icon.80x80"/>
+                  </Icon>
+                  <Action xsi:type="ShowTaskpane">
+                    <TaskpaneId>ButtonId1</TaskpaneId>
+                    <SourceLocation resid="Taskpane.Url"/>
+                  </Action>
+                </Control>
+              </Group>
+              <Group id="ComprehensionCommandsGroup">
+                <Label resid="ComprehensionCommandsGroup.Label"/>
+                <Icon>
+                  <bt:Image size="16" resid="Icon.16x16"/>
+                  <bt:Image size="32" resid="Icon.32x32"/>
+                  <bt:Image size="80" resid="Icon.80x80"/>
+                </Icon>
+                <Control xsi:type="Button" id="DataSumButton">
+                  <Label resid="DataSumButton.Label"/>
+                  <Supertip>
+                    <Title resid="DataSumButton.Label"/>
+                    <Description resid="DataSumButton.Tooltip"/>
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="Icon.16x16"/>
+                    <bt:Image size="32" resid="Icon.32x32"/>
+                    <bt:Image size="80" resid="Icon.80x80"/>
+                  </Icon>
+                  <Action xsi:type="ShowTaskpane">
+                    <TaskpaneId>ButtonId1</TaskpaneId>
+                    <SourceLocation resid="Taskpane.Url"/>
+                  </Action>
+                </Control>
+                <Control xsi:type="Button" id="FormulaExpButton">
+                  <Label resid="FormulaExpButton.Label"/>
+                  <Supertip>
+                    <Title resid="FormulaExpButton.Label"/>
+                    <Description resid="FormulaExpButton.Tooltip"/>
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="Icon.16x16"/>
+                    <bt:Image size="32" resid="Icon.32x32"/>
+                    <bt:Image size="80" resid="Icon.80x80"/>
+                  </Icon>
+                  <Action xsi:type="ShowTaskpane">
+                    <TaskpaneId>ButtonId1</TaskpaneId>
+                    <SourceLocation resid="Taskpane.Url"/>
+                  </Action>
+                </Control>
+              </Group>
+              <Group id="AboutUsCommandsGroup">
+                <Label resid="AboutUsCommandsGroup.Label"/>
+                <Icon>
+                  <bt:Image size="16" resid="Icon.16x16"/>
+                  <bt:Image size="32" resid="Icon.32x32"/>
+                  <bt:Image size="80" resid="Icon.80x80"/>
+                </Icon>
+                <Control xsi:type="Button" id="AboutUsButton">
+                  <Label resid="AboutUsButton.Label"/>
+                  <Supertip>
+                    <Title resid="AboutUsButton.Label"/>
+                    <Description resid="AboutUsButton.Tooltip"/>
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="Icon.16x16"/>
+                    <bt:Image size="32" resid="Icon.32x32"/>
+                    <bt:Image size="80" resid="Icon.80x80"/>
+                  </Icon>
+                  <Action xsi:type="ShowTaskpane">
+                    <TaskpaneId>ButtonId1</TaskpaneId>
+                    <SourceLocation resid="AboutUsTaskpane.Url"/>
+                  </Action>
+                </Control>
+              </Group>
+            </CustomTab>
           </ExtensionPoint>
         </DesktopFormFactor>
       </Host>
@@ -70,15 +177,27 @@
         <bt:Url id="GetStarted.LearnMoreUrl" DefaultValue="https://go.microsoft.com/fwlink/?LinkId=276812"/>
         <bt:Url id="Commands.Url" DefaultValue="https://localhost:3000/commands.html"/>
         <bt:Url id="Taskpane.Url" DefaultValue="https://localhost:3000/taskpane.html"/>
+        <bt:Url id="AboutUsTaskpane.Url" DefaultValue="https://localhost:3000/about.html"/>
       </bt:Urls>
       <bt:ShortStrings>
-        <bt:String id="GetStarted.Title" DefaultValue="Get started with your sample add-in!"/>
-        <bt:String id="CommandsGroup.Label" DefaultValue="Commands Group"/>
-        <bt:String id="TaskpaneButton.Label" DefaultValue="Show Taskpane"/>
+        <bt:String id="GetStarted.Title" DefaultValue="PowerSheet is ready for your Ryzen AI PC!"/>
+        <bt:String id="CommandsGroup.Label" DefaultValue="AI Generation"/>
+        <bt:String id="ComprehensionCommandsGroup.Label" DefaultValue="AI Comprehension"/>
+        <bt:String id="AboutUsCommandsGroup.Label" DefaultValue="About Us"/>
+        <bt:String id="CustomTab.Label" DefaultValue="PowerSheet"/>
+        <bt:String id="AIFillButton.Label" DefaultValue="Fill Content"/>
+        <bt:String id="AIRewriteButton.Label" DefaultValue="Formula PBE"/>
+        <bt:String id="DataSumButton.Label" DefaultValue="Data Summary"/>
+        <bt:String id="FormulaExpButton.Label" DefaultValue="Formula Explain"/>
+        <bt:String id="AboutUsButton.Label" DefaultValue="About Us"/>
       </bt:ShortStrings>
       <bt:LongStrings>
-        <bt:String id="GetStarted.Description" DefaultValue="Your sample add-in loaded succesfully. Go to the HOME tab and click the 'Show Taskpane' button to get started."/>
-        <bt:String id="TaskpaneButton.Tooltip" DefaultValue="Click to Show a Taskpane"/>
+        <bt:String id="GetStarted.Description" DefaultValue="PowerSheet employs Ryzen AI to run large language models locally, which enhances your productivity while protecting your confidential data. Open the pane and try it out!"/>
+        <bt:String id="AIFillButton.Tooltip" DefaultValue="Click to Show Tools"/>
+        <bt:String id="AIRewriteButton.Tooltip" DefaultValue="Click to Show Tools"/>
+        <bt:String id="DataSumButton.Tooltip" DefaultValue="Click to Show Tools"/>
+        <bt:String id="FormulaExpButton.Tooltip" DefaultValue="Click to Show Tools"/>
+        <bt:String id="AboutUsButton.Tooltip" DefaultValue="Click to Show Tools"/>
       </bt:LongStrings>
     </Resources>
   </VersionOverrides>
