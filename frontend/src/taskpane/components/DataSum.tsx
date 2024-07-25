@@ -79,10 +79,11 @@ const useStyles = makeStyles({
   },
   finst: {
     width: "100%",
+    whiteSpace: "pre-line",
   },
 });
 
-const TextInsertion: React.FC = () => {
+const DataSum: React.FC = () => {
   const connection = makeSocket();
   connection.on("message", function (msg) {
     recvRangeCandidate(msg);
@@ -90,8 +91,10 @@ const TextInsertion: React.FC = () => {
     if (msg["status"] == "ok") {
       feedbackDialogRestore();
       setFeedbackOpen(true);
-    } else {
-      setFailedOpen(true);
+      setInputs((prevInputs) => ({
+        ...prevInputs,
+        feedbackMsg: msg["reply"],
+      }));
     }
   });
   console.log(connection);
@@ -108,7 +111,6 @@ const TextInsertion: React.FC = () => {
 
   const [progressOpen, setProgressOpen] = React.useState(false);
   const [feedbackOpen, setFeedbackOpen] = React.useState(false);
-  const [failedOpen, setFailedOpen] = React.useState(false);
   const feedbackDialogRestore = () => {
     setInputs((prevInputs) => ({
       ...prevInputs,
@@ -136,9 +138,8 @@ const TextInsertion: React.FC = () => {
 
   const handleSubmit = async () => {
     var msg = {
-      type: "fill",
+      type: "summary",
       inputRange: inputs.inputRange,
-      outputRange: inputs.outputRange,
       description: inputs.description,
       feedbackMsg: inputs.feedbackMsg,
       inputData: await getRangeData(inputs.inputRange),
@@ -166,7 +167,7 @@ const TextInsertion: React.FC = () => {
     <div className={styles.textPromptAndInsertion}>
       <Breadcrumb aria-label="Breadcrumb default example">
         <BreadcrumbItem>
-          <BreadcrumbButton icon={<BookToolboxRegular />}>Fill Content</BreadcrumbButton>
+          <BreadcrumbButton icon={<BookToolboxRegular />}>Data Summary</BreadcrumbButton>
         </BreadcrumbItem>
       </Breadcrumb>
       <Card className={styles.cardStyle}>
@@ -176,7 +177,7 @@ const TextInsertion: React.FC = () => {
               <b>Referencing Data</b>
             </Body1>
           }
-          description={<Caption1>Select the data that should be referenced by the generated cell.</Caption1>}
+          description={<Caption1>Select the data that should be referenced for the summary.</Caption1>}
         />
         <Label weight="semibold">{inputs.inputRange}</Label>
         <Button name="inputRange" disabled={false} size="medium" onClick={handleRetrieveRange}>
@@ -188,29 +189,10 @@ const TextInsertion: React.FC = () => {
         <CardHeader
           header={
             <Body1>
-              <b>Output Range</b>
+              <b>Instruction (Optional)</b>
             </Body1>
           }
-          description={<Caption1>Select the output range that should be generated.</Caption1>}
-        />
-        <Label weight="semibold">{inputs.outputRange}</Label>
-        <Button name="outputRange" disabled={false} size="medium" onClick={handleRetrieveRange}>
-          Select Cells
-        </Button>
-      </Card>
-
-      <Card className={styles.cardStyle}>
-        <CardHeader
-          header={
-            <Body1>
-              <b>Description (Optional)</b>
-            </Body1>
-          }
-          description={
-            <Caption1>
-              Write additional information that you want Ryzen AI to know, for better generation results.
-            </Caption1>
-          }
+          description={<Caption1>You can instruct the model, telling it how the summary should be generated.</Caption1>}
         />
         <Textarea size="large" name="description" value={inputs.description} onChange={handleTextChange} />
       </Card>
@@ -223,7 +205,7 @@ const TextInsertion: React.FC = () => {
           size="large"
           onClick={handleSubmit}
         >
-          Fill Content
+          Summary
         </Button>
       </Field>
       <Label>
@@ -269,79 +251,18 @@ const TextInsertion: React.FC = () => {
           <DialogBody>
             <DialogTitle>
               <LightbulbCheckmarkRegular />
-              &nbsp;Ryzen AI has came up with an idea!
+              &nbsp;Data Summary
             </DialogTitle>
             <DialogContent>
-              <Label style={{ display: inputs.furtherInst ? "none" : "block" }}>
-                Check your worksheet to see whether it meets your goal.
-              </Label>
-              <Field
-                label="Input further instruction"
-                className={styles.finst}
-                style={{ display: inputs.furtherInst ? "block" : "none" }}
-              >
-                <Textarea
-                  name="feedbackMsg"
-                  value={inputs.feedbackMsg}
-                  onChange={handleTextChange}
-                  className={styles.finst}
-                />
-              </Field>
+              <Label className={styles.finst}></Label>
+              {inputs.feedbackMsg}
             </DialogContent>
 
             <DialogActions>
               <Button
-                appearance="secondary"
-                onClick={() => {
-                  setInputs((prevInputs) => ({
-                    ...prevInputs,
-                    furtherInst: true,
-                  }));
-                }}
-                style={{ display: inputs.furtherInst ? "none" : "block" }}
-              >
-                Further Instruction
-              </Button>
-              <Button
                 appearance="primary"
                 onClick={() => {
-                  if (inputs.furtherInst) {
-                    handleFeedback();
-                  }
                   setFeedbackOpen(false);
-                }}
-              >
-                {inputs.furtherInst ? "Submit" : "Accept"}
-              </Button>
-            </DialogActions>
-          </DialogBody>
-        </DialogSurface>
-      </Dialog>
-      <Dialog
-        // this controls the dialog open state
-        open={failedOpen}
-        onOpenChange={(_, data) => {
-          // it is the users responsibility to react accordingly to the open state change
-          setFailedOpen(data.open);
-        }}
-      >
-        <DialogSurface>
-          <DialogBody>
-            <DialogTitle>
-              <QuestionCircleRegular />
-              &nbsp;Oops... Ryzen AI gets a bit confused here.
-            </DialogTitle>
-            <DialogContent>
-              <Label>
-                Narrow the scope of input or output and provide a more precise description to help the model understand.
-              </Label>
-            </DialogContent>
-
-            <DialogActions>
-              <Button
-                appearance="primary"
-                onClick={() => {
-                  setFailedOpen(false);
                 }}
               >
                 Close
@@ -354,4 +275,4 @@ const TextInsertion: React.FC = () => {
   );
 };
 
-export default TextInsertion;
+export default DataSum;

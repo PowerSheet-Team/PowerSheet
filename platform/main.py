@@ -9,12 +9,16 @@ socketio = SocketIO(app, cors_allowed_origins='*')
 llm = llm_api.LLM_API()
 
 last_context = None
+last_analysis = None
 
 
 def handle_autofill(msg):
+    global last_context
+    global last_analysis
     analysis = Analysis(msg)
     context = llm.getContext()
     last_context = context
+    last_analysis = analysis
     print(analysis.gen_query())
     reply = context.query(analysis.gen_query())
     print(reply)
@@ -29,16 +33,37 @@ def handle_autofill(msg):
 
     socketio.emit('message', reply)
 
+
 def handle_feedback(msg):
-    analysis = Analysis(msg)
     context = last_context
-    reply = context.query(msg["feedbackMsg"])
+    analysis = last_analysis
+    reply = context.query(f"No I does not mean that, I want " + msg["feedbackMsg"])
     print(reply)
     cell_candidate = analysis.apply_reply(reply)
     reply = {
         "status": "ok",
         "range": analysis.outputSection.range,
         "candidate": cell_candidate,
+    }
+
+    print(reply)
+
+    socketio.emit('message', reply)
+
+
+def handle_summary(msg):
+    global last_context
+    global last_analysis
+    analysis = Analysis(msg)
+    context = llm.getContext()
+    last_context = context
+    last_analysis = analysis
+    print(analysis.gen_summary_query())
+    reply = context.query(analysis.gen_summary_query())
+    print(reply)
+    reply = {
+        "status": "ok",
+        "reply": reply
     }
 
     print(reply)
@@ -54,6 +79,9 @@ def handle_message(msg):
         handle_autofill(msg)
     elif msg["type"] == "feedback":
         handle_feedback(msg)
+    elif msg["type"] == "summary":
+        handle_summary(msg)
+
 
 if __name__ == '__main__':
     socketio.run(app, allow_unsafe_werkzeug=True, debug=True)

@@ -72,13 +72,13 @@
                     <Description resid="AIFillButton.Tooltip"/>
                   </Supertip>
                   <Icon>
-                    <bt:Image size="16" resid="Icon.16x16"/>
-                    <bt:Image size="32" resid="Icon.32x32"/>
-                    <bt:Image size="80" resid="Icon.80x80"/>
+                    <bt:Image size="16" resid="FillIcon.16x16"/>
+                    <bt:Image size="32" resid="FillIcon.32x32"/>
+                    <bt:Image size="80" resid="FillIcon.80x80"/>
                   </Icon>
                   <Action xsi:type="ShowTaskpane">
                     <TaskpaneId>ButtonId1</TaskpaneId>
-                    <SourceLocation resid="Taskpane.Url"/>
+                    <SourceLocation resid="FillTaskpane.Url"/>
                   </Action>
                 </Control>
                 <Control xsi:type="Button" id="AIRewriteButton">
@@ -88,13 +88,13 @@
                     <Description resid="AIRewriteButton.Tooltip"/>
                   </Supertip>
                   <Icon>
-                    <bt:Image size="16" resid="Icon.16x16"/>
-                    <bt:Image size="32" resid="Icon.32x32"/>
-                    <bt:Image size="80" resid="Icon.80x80"/>
+                    <bt:Image size="16" resid="PBEIcon.16x16"/>
+                    <bt:Image size="32" resid="PBEIcon.32x32"/>
+                    <bt:Image size="80" resid="PBEIcon.80x80"/>
                   </Icon>
                   <Action xsi:type="ShowTaskpane">
                     <TaskpaneId>ButtonId1</TaskpaneId>
-                    <SourceLocation resid="Taskpane.Url"/>
+                    <SourceLocation resid="PBETaskpane.Url"/>
                   </Action>
                 </Control>
               </Group>
@@ -112,13 +112,13 @@
                     <Description resid="DataSumButton.Tooltip"/>
                   </Supertip>
                   <Icon>
-                    <bt:Image size="16" resid="Icon.16x16"/>
-                    <bt:Image size="32" resid="Icon.32x32"/>
-                    <bt:Image size="80" resid="Icon.80x80"/>
+                    <bt:Image size="16" resid="SumIcon.16x16"/>
+                    <bt:Image size="32" resid="SumIcon.32x32"/>
+                    <bt:Image size="80" resid="SumIcon.80x80"/>
                   </Icon>
                   <Action xsi:type="ShowTaskpane">
                     <TaskpaneId>ButtonId1</TaskpaneId>
-                    <SourceLocation resid="Taskpane.Url"/>
+                    <SourceLocation resid="DataSumTaskpane.Url"/>
                   </Action>
                 </Control>
                 <Control xsi:type="Button" id="FormulaExpButton">
@@ -128,13 +128,93 @@
                     <Description resid="FormulaExpButton.Tooltip"/>
                   </Supertip>
                   <Icon>
-                    <bt:Image size="16" resid="Icon.16x16"/>
-                    <bt:Image size="32" resid="Icon.32x32"/>
-                    <bt:Image size="80" resid="Icon.80x80"/>
+                    <bt:Image size="16" resid="FormulaExpIcon.16x16"/>
+                    <bt:Image size="32" resid="FormulaExpIcon.32x32"/>
+                    <bt:Image size="80" resid="FormulaExpIcon.80x80"/>
                   </Icon>
                   <Action xsi:type="ShowTaskpane">
                     <TaskpaneId>ButtonId1</TaskpaneId>
-                    <SourceLocation resid="Taskpane.Url"/>
+                    <SourceLocation resid="FormulaExpTaskpane.Url"/>
+                  </Action>
+                </Control>
+              </Group>
+              <Group id="CheckingCommandsGroup">
+                <Label resid="CheckingCommandsGroup.Label"/>
+                <Icon>
+                  <bt:Image size="16" resid="Icon.16x16"/>
+                  <bt:Image size="32" resid="Icon.32x32"/>
+                  <bt:Image size="80" resid="Icon.80x80"/>
+                </Icon>
+                <Control xsi:type="Button" id="CompatCheckButton">
+                  <Label resid="CompatCheckButton.Label"/>
+                  <Supertip>
+                    <Title resid="CompatCheckButton.Label"/>
+                    <Description resid="CompatCheckButton.Tooltip"/>
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="CompCheckIcon.16x16"/>
+                    <bt:Image size="32" resid="CompCheckIcon.32x32"/>
+                    <bt:Image size="80" resid="CompCheckIcon.80x80"/>
+                  </Icon>
+                  <Action xsi:type="ShowTaskpane">
+                    <TaskpaneId>ButtonId1</TaskpaneId>
+                    <SourceLocation resid="CompCheckTaskpane.Url"/>
+                  </Action>
+                </Control>
+                <Control xsi:type="Button" id="FormulaCheckButton">
+                  <Label resid="FormulaCheckButton.Label"/>
+                  <Supertip>
+                    <Title resid="FormulaCheckButton.Label"/>
+                    <Description resid="FormulaCheckButton.Tooltip"/>
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="FormulaCheckIcon.16x16"/>
+                    <bt:Image size="32" resid="FormulaCheckIcon.32x32"/>
+                    <bt:Image size="80" resid="FormulaCheckIcon.80x80"/>
+                  </Icon>
+                  <Action xsi:type="ShowTaskpane">
+                    <TaskpaneId>ButtonId1</TaskpaneId>
+                    <SourceLocation resid="FormulaCheckTaskpane.Url"/>
+                  </Action>
+                </Control>
+              </Group>
+              <Group id="BatchCommandsGroup">
+                <Label resid="BatchCommandsGroup.Label"/>
+                <Icon>
+                  <bt:Image size="16" resid="Icon.16x16"/>
+                  <bt:Image size="32" resid="Icon.32x32"/>
+                  <bt:Image size="80" resid="Icon.80x80"/>
+                </Icon>
+                <Control xsi:type="Button" id="RangeSelButton">
+                  <Label resid="RangeSelButton.Label"/>
+                  <Supertip>
+                    <Title resid="RangeSelButton.Label"/>
+                    <Description resid="RangeSelButton.Tooltip"/>
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="RangeSelIcon.16x16"/>
+                    <bt:Image size="32" resid="RangeSelIcon.32x32"/>
+                    <bt:Image size="80" resid="RangeSelIcon.80x80"/>
+                  </Icon>
+                  <Action xsi:type="ShowTaskpane">
+                    <TaskpaneId>ButtonId1</TaskpaneId>
+                    <SourceLocation resid="RangeSelTaskpane.Url"/>
+                  </Action>
+                </Control>
+                <Control xsi:type="Button" id="BatchProcessButton">
+                  <Label resid="BatchProcessButton.Label"/>
+                  <Supertip>
+                    <Title resid="BatchProcessButton.Label"/>
+                    <Description resid="BatchProcessButton.Tooltip"/>
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="BatchProcessIcon.16x16"/>
+                    <bt:Image size="32" resid="BatchProcessIcon.32x32"/>
+                    <bt:Image size="80" resid="BatchProcessIcon.80x80"/>
+                  </Icon>
+                  <Action xsi:type="ShowTaskpane">
+                    <TaskpaneId>ButtonId1</TaskpaneId>
+                    <SourceLocation resid="BatchProcessTaskpane.Url"/>
                   </Action>
                 </Control>
               </Group>
@@ -152,13 +232,29 @@
                     <Description resid="AboutUsButton.Tooltip"/>
                   </Supertip>
                   <Icon>
-                    <bt:Image size="16" resid="Icon.16x16"/>
-                    <bt:Image size="32" resid="Icon.32x32"/>
-                    <bt:Image size="80" resid="Icon.80x80"/>
+                    <bt:Image size="16" resid="AboutIcon.16x16"/>
+                    <bt:Image size="32" resid="AboutIcon.32x32"/>
+                    <bt:Image size="80" resid="AboutIcon.80x80"/>
                   </Icon>
                   <Action xsi:type="ShowTaskpane">
                     <TaskpaneId>ButtonId1</TaskpaneId>
                     <SourceLocation resid="AboutUsTaskpane.Url"/>
+                  </Action>
+                </Control>
+                <Control xsi:type="Button" id="AboutRyzenButton">
+                  <Label resid="AboutRyzenButton.Label"/>
+                  <Supertip>
+                    <Title resid="AboutRyzenButton.Label"/>
+                    <Description resid="AboutRyzenButton.Tooltip"/>
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="AboutRyzenIcon.16x16"/>
+                    <bt:Image size="32" resid="AboutRyzenIcon.32x32"/>
+                    <bt:Image size="80" resid="AboutRyzenIcon.80x80"/>
+                  </Icon>
+                  <Action xsi:type="ShowTaskpane">
+                    <TaskpaneId>ButtonId1</TaskpaneId>
+                    <SourceLocation resid="AboutRyzenTaskpane.Url"/>
                   </Action>
                 </Control>
               </Group>
@@ -169,27 +265,73 @@
     </Hosts>
     <Resources>
       <bt:Images>
-        <bt:Image id="Icon.16x16" DefaultValue="https://localhost:3000/assets/icon-16.png"/>
-        <bt:Image id="Icon.32x32" DefaultValue="https://localhost:3000/assets/icon-32.png"/>
-        <bt:Image id="Icon.80x80" DefaultValue="https://localhost:3000/assets/icon-80.png"/>
+        <bt:Image id="Icon.16x16" DefaultValue="https://localhost:3000/assets/fill-16.png"/>
+        <bt:Image id="Icon.32x32" DefaultValue="https://localhost:3000/assets/fill-32.png"/>
+        <bt:Image id="Icon.80x80" DefaultValue="https://localhost:3000/assets/fill-80.png"/>
+        <bt:Image id="FillIcon.16x16" DefaultValue="https://localhost:3000/assets/fill-16.png"/>
+        <bt:Image id="FillIcon.32x32" DefaultValue="https://localhost:3000/assets/fill-32.png"/>
+        <bt:Image id="FillIcon.80x80" DefaultValue="https://localhost:3000/assets/fill-80.png"/>
+        <bt:Image id="PBEIcon.16x16" DefaultValue="https://localhost:3000/assets/pbe-16.png"/>
+        <bt:Image id="PBEIcon.32x32" DefaultValue="https://localhost:3000/assets/pbe-32.png"/>
+        <bt:Image id="PBEIcon.80x80" DefaultValue="https://localhost:3000/assets/pbe-80.png"/>
+        <bt:Image id="SumIcon.16x16" DefaultValue="https://localhost:3000/assets/sum-16.png"/>
+        <bt:Image id="SumIcon.32x32" DefaultValue="https://localhost:3000/assets/sum-32.png"/>
+        <bt:Image id="SumIcon.80x80" DefaultValue="https://localhost:3000/assets/sum-80.png"/>
+        <bt:Image id="FormulaExpIcon.16x16" DefaultValue="https://localhost:3000/assets/formulaexp-16.png"/>
+        <bt:Image id="FormulaExpIcon.32x32" DefaultValue="https://localhost:3000/assets/formulaexp-32.png"/>
+        <bt:Image id="FormulaExpIcon.80x80" DefaultValue="https://localhost:3000/assets/formulaexp-80.png"/>
+        <bt:Image id="CompCheckIcon.16x16" DefaultValue="https://localhost:3000/assets/compchk-16.png"/>
+        <bt:Image id="CompCheckIcon.32x32" DefaultValue="https://localhost:3000/assets/compchk-32.png"/>
+        <bt:Image id="CompCheckIcon.80x80" DefaultValue="https://localhost:3000/assets/compchk-80.png"/>
+        <bt:Image id="FormulaCheckIcon.16x16" DefaultValue="https://localhost:3000/assets/formulachk-16.png"/>
+        <bt:Image id="FormulaCheckIcon.32x32" DefaultValue="https://localhost:3000/assets/formulachk-32.png"/>
+        <bt:Image id="FormulaCheckIcon.80x80" DefaultValue="https://localhost:3000/assets/formulachk-80.png"/>
+        <bt:Image id="RangeSelIcon.16x16" DefaultValue="https://localhost:3000/assets/rangesel-16.png"/>
+        <bt:Image id="RangeSelIcon.32x32" DefaultValue="https://localhost:3000/assets/rangesel-32.png"/>
+        <bt:Image id="RangeSelIcon.80x80" DefaultValue="https://localhost:3000/assets/rangesel-80.png"/>
+        <bt:Image id="BatchProcessIcon.16x16" DefaultValue="https://localhost:3000/assets/batchproc-16.png"/>
+        <bt:Image id="BatchProcessIcon.32x32" DefaultValue="https://localhost:3000/assets/batchproc-32.png"/>
+        <bt:Image id="BatchProcessIcon.80x80" DefaultValue="https://localhost:3000/assets/batchproc-80.png"/>
+        <bt:Image id="AboutIcon.16x16" DefaultValue="https://localhost:3000/assets/about-16.png"/>
+        <bt:Image id="AboutIcon.32x32" DefaultValue="https://localhost:3000/assets/about-32.png"/>
+        <bt:Image id="AboutIcon.80x80" DefaultValue="https://localhost:3000/assets/about-80.png"/>
+        <bt:Image id="AboutRyzenIcon.16x16" DefaultValue="https://localhost:3000/assets/ryzen-16.png"/>
+        <bt:Image id="AboutRyzenIcon.32x32" DefaultValue="https://localhost:3000/assets/ryzen-32.png"/>
+        <bt:Image id="AboutRyzenIcon.80x80" DefaultValue="https://localhost:3000/assets/ryzen-80.png"/>
       </bt:Images>
       <bt:Urls>
         <bt:Url id="GetStarted.LearnMoreUrl" DefaultValue="https://go.microsoft.com/fwlink/?LinkId=276812"/>
         <bt:Url id="Commands.Url" DefaultValue="https://localhost:3000/commands.html"/>
-        <bt:Url id="Taskpane.Url" DefaultValue="https://localhost:3000/taskpane.html"/>
-        <bt:Url id="AboutUsTaskpane.Url" DefaultValue="https://localhost:3000/about.html"/>
+        <bt:Url id="FillTaskpane.Url" DefaultValue="https://localhost:3000/taskpane.html#/fill"/>
+        <bt:Url id="PBETaskpane.Url" DefaultValue="https://localhost:3000/taskpane.html#/pbe"/>
+        <bt:Url id="DataSumTaskpane.Url" DefaultValue="https://localhost:3000/taskpane.html#/datasum"/>
+        <bt:Url id="FormulaExpTaskpane.Url" DefaultValue="https://localhost:3000/taskpane.html#/formulaexp"/>
+        <bt:Url id="CompCheckTaskpane.Url" DefaultValue="https://localhost:3000/taskpane.html#/compcheck"/>
+        <bt:Url id="FormulaCheckTaskpane.Url" DefaultValue="https://localhost:3000/taskpane.html#/formulacheck"/>
+        <bt:Url id="BatchProcessTaskpane.Url" DefaultValue="https://localhost:3000/taskpane.html#/batchprocess"/>
+        <bt:Url id="RangeSelTaskpane.Url" DefaultValue="https://localhost:3000/taskpane.html#/rangesel"/>
+        <bt:Url id="AboutRyzenTaskpane.Url" DefaultValue="https://localhost:3000/taskpane.html#/aboutryzen"/>
+        <bt:Url id="AboutUsTaskpane.Url" DefaultValue="https://localhost:3000/taskpane.html#/about"/>
+        
       </bt:Urls>
       <bt:ShortStrings>
         <bt:String id="GetStarted.Title" DefaultValue="PowerSheet is ready for your Ryzen AI PC!"/>
         <bt:String id="CommandsGroup.Label" DefaultValue="AI Generation"/>
         <bt:String id="ComprehensionCommandsGroup.Label" DefaultValue="AI Comprehension"/>
-        <bt:String id="AboutUsCommandsGroup.Label" DefaultValue="About Us"/>
+        <bt:String id="AboutUsCommandsGroup.Label" DefaultValue="About"/>
+        <bt:String id="CheckingCommandsGroup.Label" DefaultValue="AI Checking"/>
+        <bt:String id="BatchCommandsGroup.Label" DefaultValue="AI Batch Processing"/>
         <bt:String id="CustomTab.Label" DefaultValue="PowerSheet"/>
         <bt:String id="AIFillButton.Label" DefaultValue="Fill Content"/>
         <bt:String id="AIRewriteButton.Label" DefaultValue="Formula PBE"/>
         <bt:String id="DataSumButton.Label" DefaultValue="Data Summary"/>
         <bt:String id="FormulaExpButton.Label" DefaultValue="Formula Explain"/>
+        <bt:String id="CompatCheckButton.Label" DefaultValue="Compatibility Check"/>
+        <bt:String id="FormulaCheckButton.Label" DefaultValue="Formula Check"/>
+        <bt:String id="RangeSelButton.Label" DefaultValue="Range Selection"/>
+        <bt:String id="BatchProcessButton.Label" DefaultValue="Batch Process"/>
         <bt:String id="AboutUsButton.Label" DefaultValue="About Us"/>
+        <bt:String id="AboutRyzenButton.Label" DefaultValue="About Ryzen AI"/>
       </bt:ShortStrings>
       <bt:LongStrings>
         <bt:String id="GetStarted.Description" DefaultValue="PowerSheet employs Ryzen AI to run large language models locally, which enhances your productivity while protecting your confidential data. Open the pane and try it out!"/>
@@ -198,6 +340,11 @@
         <bt:String id="DataSumButton.Tooltip" DefaultValue="Click to Show Tools"/>
         <bt:String id="FormulaExpButton.Tooltip" DefaultValue="Click to Show Tools"/>
         <bt:String id="AboutUsButton.Tooltip" DefaultValue="Click to Show Tools"/>
+        <bt:String id="CompatCheckButton.Tooltip" DefaultValue="Click to Show Tools"/>
+        <bt:String id="FormulaCheckButton.Tooltip" DefaultValue="Click to Show Tools"/>
+        <bt:String id="BatchProcessButton.Tooltip" DefaultValue="Click to Show Tools"/>
+        <bt:String id="RangeSelButton.Tooltip" DefaultValue="Click to Show Tools"/>
+        <bt:String id="AboutRyzenButton.Tooltip" DefaultValue="Click to Show Tools"/>
       </bt:LongStrings>
     </Resources>
   </VersionOverrides>

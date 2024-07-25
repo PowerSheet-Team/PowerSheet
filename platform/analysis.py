@@ -45,7 +45,8 @@ def getSection(input: str, data: list):
 class Analysis:
     def __init__(self, msg: dict):
         self.inputSection = getSection(msg['inputRange'], msg['inputData'])
-        self.outputSection = getSection(msg['outputRange'], msg['outputData'])
+        if "outputRange" in msg.keys():
+            self.outputSection = getSection(msg['outputRange'], msg['outputData'])
         self.desc = msg['description']
         pass
 
@@ -58,6 +59,12 @@ class Analysis:
             f"{self.outputSection.width * self.outputSection.height} lines. You are encouraged to use formula if it "
             f"is appliable. You should only generate one possible solution, and only output ONCE for each cell in "
             f"<CELL></CELL>. Don't output the additional evaluated result of formulas. Think step by step.")
+        return query_str
+
+    def gen_summary_query(self):
+        query_str = (
+            f"I have an Excel sheet, and a section from {self.inputSection.cellL.get_index_str()} to {self.inputSection.cellR.get_index_str()}. The content is {self.inputSection.data}. "
+            f"Now I want you to output the summary of these data.")
         return query_str
 
     def apply_reply(self, reply: str):
