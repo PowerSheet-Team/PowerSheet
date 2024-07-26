@@ -1,13 +1,12 @@
 import * as React from "react";
-import Header from "./Header";
-import HeroList, { HeroListItem } from "./HeroList";
 import TextInsertion from "./TextInsertion";
 import About from "./About";
 import AboutRyzen from "./AboutRyzen";
 import DataSum from "./DataSum";
 import FormulaExp from "./FormulaExp";
-import { makeStyles, Label } from "@fluentui/react-components";
-import { Ribbon24Regular, LockOpen24Regular, DesignIdeas24Regular } from "@fluentui/react-icons";
+import FormulaPBE from "./FormulaPBE";
+import RangeSel from "./RangeSel";
+import { makeStyles } from "@fluentui/react-components";
 import { HashRouter as Router, Switch, Route } from "react-router-dom";
 
 interface AppProps {
@@ -35,6 +34,8 @@ const App = (props: AppProps) => {
           <Route exact path="/about" component={About} />
           <Route exact path="/aboutryzen" component={AboutRyzen} />
           <Route exact path="/formulaexp" component={FormulaExp} />
+          <Route exact path="/pbe" component={FormulaPBE} />
+          <Route exact path="/rangesel" component={RangeSel} />
         </Switch>
       </Router>
     </div>
