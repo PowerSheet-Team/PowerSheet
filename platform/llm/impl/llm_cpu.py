@@ -12,9 +12,9 @@ class LLM_CPU(LLM_HF):
             torch_dtype=torch.float16,
             device_map='cpu',
         )
-        model = torch.quantization.quantize_dynamic(
-            model, {torch.nn.Linear}, dtype=torch.qint8
-        )
+        # model = torch.quantization.quantize_dynamic(
+        #     model, {torch.nn.Linear}, dtype=torch.qint8
+        # )
         tokenizer = AutoTokenizer.from_pretrained(model_name)
         super().__init__(model, tokenizer, system_prompt)
 
