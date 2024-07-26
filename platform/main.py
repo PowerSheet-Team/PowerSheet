@@ -50,6 +50,20 @@ def handle_feedback(msg):
 
     socketio.emit('message', reply)
 
+def handle_rangesel(msg):
+    context = llm.getContext()
+    query = Analysis.gen_range_sel_query(msg["description"])
+    reply = context.query(query)
+    print(reply)
+    code = Analysis.apply_code(reply)
+    print(code)
+    reply = {
+        "status": "ok",
+        "code": code,
+        "range": msg["inputRange"]
+    }
+    print(reply)
+    socketio.emit('message', reply)
 
 def handle_summary(msg):
     global last_context
@@ -70,6 +84,45 @@ def handle_summary(msg):
 
     socketio.emit('message', reply)
 
+def handle_formula_exp(msg):
+    global last_context
+    global last_analysis
+    analysis = Analysis(msg)
+    context = llm.getContext()
+    last_context = context
+    last_analysis = analysis
+    print(analysis.gen_exp_explain_query())
+    reply = context.query(analysis.gen_exp_explain_query())
+    print(reply)
+    reply = {
+        "status": "ok",
+        "reply": reply
+    }
+
+    print(reply)
+
+    socketio.emit('message', reply)
+
+def handle_formula_pbe(msg):
+    global last_context
+    global last_analysis
+    analysis = Analysis(msg)
+    context = llm.getContext()
+    last_context = context
+    last_analysis = analysis
+    print(analysis.gen_query())
+    reply = context.query(analysis.gen_formula_pbe_query())
+    print(reply)
+    cell_candidate = analysis.apply_reply(reply)
+    reply = {
+        "status": "ok",
+        "range": analysis.outputSection.range,
+        "candidate": cell_candidate,
+    }
+
+    print(reply)
+
+    socketio.emit('message', reply)
 
 @socketio.on('message')
 def handle_message(msg):
@@ -81,6 +134,12 @@ def handle_message(msg):
         handle_feedback(msg)
     elif msg["type"] == "summary":
         handle_summary(msg)
+    elif msg["type"] == "formula_exp":
+        handle_formula_exp(msg)
+    elif msg["type"] == "formula_pbe":
+        handle_formula_pbe(msg)
+    elif msg["type"] == "range_sel":
+        handle_rangesel(msg)
 
 
 if __name__ == '__main__':
