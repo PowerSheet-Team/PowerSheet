@@ -16,7 +16,17 @@ class Context_CUDA(Context):
         self.cache = cache
         self.tokens = tokens
 
-    def query(self, input: str, prefix='', max_new_tokens=50, early_stopping: Optional[function[str, bool]] = None) -> str:
+    def query(
+        self, 
+        input: str, 
+        prefix='', 
+        max_new_tokens=50, 
+        early_stopping: Optional[function[str, bool]] = None,
+        do_sample: Optional[bool] = None,
+        temperature: Optional[float] = None,
+        top_k: Optional[int] = None,
+        top_p: Optional[float] = None,
+    ) -> str:
         messages = [{"role": "user", "content": input}]
         input_ids: torch.Tensor = self.tokenizer.apply_chat_template(
             messages,
@@ -59,6 +69,10 @@ class Context_CUDA(Context):
             return_dict_in_generate=True, 
             past_key_values=self.cache,
             max_new_tokens=max_new_tokens,
+            do_sample=do_sample,
+            temperature=temperature,
+            top_p=top_p,
+            top_k=top_k,
             stopping_criteria=[stopping_criteria] if stopping_criteria is not None else None,
         )
         self.cache = outputs.past_key_values
