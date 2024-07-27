@@ -6,6 +6,9 @@ import DataSum from "./DataSum";
 import FormulaExp from "./FormulaExp";
 import FormulaPBE from "./FormulaPBE";
 import RangeSel from "./RangeSel";
+import BatchProc from "./BatchProc";
+import CompChk from "./CompChk";
+import Visual from "./Visual";
 import { makeStyles } from "@fluentui/react-components";
 import { HashRouter as Router, Switch, Route } from "react-router-dom";
 
@@ -36,6 +39,9 @@ const App = (props: AppProps) => {
           <Route exact path="/formulaexp" component={FormulaExp} />
           <Route exact path="/pbe" component={FormulaPBE} />
           <Route exact path="/rangesel" component={RangeSel} />
+          <Route exact path="/batchprocess" component={BatchProc} />
+          <Route exact path="/compcheck" component={CompChk} />
+          <Route exact path="/createvisual" component={Visual} />
         </Switch>
       </Router>
     </div>

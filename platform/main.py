@@ -50,6 +50,7 @@ def handle_feedback(msg):
 
     socketio.emit('message', reply)
 
+
 def handle_rangesel(msg):
     context = llm.getContext()
     query = Analysis.gen_range_sel_query(msg["description"])
@@ -58,12 +59,14 @@ def handle_rangesel(msg):
     code = Analysis.apply_code(reply)
     print(code)
     reply = {
+        "type": "rangesel",
         "status": "ok",
         "code": code,
         "range": msg["inputRange"]
     }
     print(reply)
     socketio.emit('message', reply)
+
 
 def handle_summary(msg):
     global last_context
@@ -84,6 +87,7 @@ def handle_summary(msg):
 
     socketio.emit('message', reply)
 
+
 def handle_formula_exp(msg):
     global last_context
     global last_analysis
@@ -102,6 +106,24 @@ def handle_formula_exp(msg):
     print(reply)
 
     socketio.emit('message', reply)
+
+
+def handle_batchproc(msg):
+    context = llm.getContext()
+    query = Analysis.gen_batchproc_query(msg["description"])
+    reply = context.query(query)
+    print(reply)
+    code = Analysis.apply_code(reply)
+    print(code)
+    reply = {
+        "type": "batchproc",
+        "status": "ok",
+        "code": code,
+        "range": msg["inputRange"]
+    }
+    print(reply)
+    socketio.emit('message', reply)
+
 
 def handle_formula_pbe(msg):
     global last_context
@@ -124,6 +146,46 @@ def handle_formula_pbe(msg):
 
     socketio.emit('message', reply)
 
+
+def handle_create_visual(msg):
+    context = llm.getContext()
+    analysis = Analysis(msg)
+    query = analysis.gen_create_visual_query()
+    reply = context.query(query)
+    print(reply)
+    title, type = analysis.apply_create_visual(reply)
+    reply = {
+        "type": "create_visual",
+        "status": "ok",
+        "range": analysis.inputSection.range,
+        "title": title,
+        "chart_type": type
+    }
+    print(reply)
+    socketio.emit('message', reply)
+
+
+def handle_formula_chk(msg):
+    context = llm.getContext()
+    analysis = Analysis(msg)
+    query = analysis.gen_formula_chk_query()
+    reply = context.query(query)
+    warns, passes = analysis.apply_formula_chk(reply)
+    infos = []
+    for warn in warns:
+        infos.append({"intent": "warning", "info": warn})
+    for pass_ in passes:
+        infos.append({"intent": "success", "info": pass_})
+    print(reply)
+    reply = {
+        "type": "formula_chk",
+        "status": "ok",
+        "info": infos,
+    }
+    print(reply)
+    socketio.emit('message', reply)
+
+
 @socketio.on('message')
 def handle_message(msg):
     global last_context
@@ -140,6 +202,12 @@ def handle_message(msg):
         handle_formula_pbe(msg)
     elif msg["type"] == "range_sel":
         handle_rangesel(msg)
+    elif msg["type"] == "batchproc":
+        handle_batchproc(msg)
+    elif msg["type"] == "formula_chk":
+        handle_formula_chk(msg)
+    elif msg["type"] == "create_visual":
+        handle_create_visual(msg)
 
 
 if __name__ == '__main__':

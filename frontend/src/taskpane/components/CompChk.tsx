@@ -1,5 +1,6 @@
 import * as React from "react";
 import { useState } from "react";
+import { DismissRegular } from "@fluentui/react-icons";
 import {
   Field,
   Textarea,
@@ -16,9 +17,6 @@ import {
   DialogContent,
   Button,
   useRestoreFocusTarget,
-  MessageBar,
-  MessageBarTitle,
-  MessageBarBody,
   MessageBarIntent,
   Link,
   Card,
@@ -31,7 +29,10 @@ import {
   Breadcrumb,
   BreadcrumbDivider,
   BreadcrumbButton,
-  CounterBadge,
+  MessageBar,
+  MessageBarActions,
+  MessageBarBody,
+  MessageBarTitle,
 } from "@fluentui/react-components";
 import {
   CalendarMonthFilled,
@@ -43,7 +44,7 @@ import {
   QuestionCircleRegular,
 } from "@fluentui/react-icons";
 import makeSocket from "../../wsconnect/wsconnect";
-import { getRangeData, promptForAddressRange, recvCode } from "../office-document";
+import { getRangeData, getRangeFormula, promptForAddressRange, recvRangeCandidate } from "../office-document";
 import { getCellRange } from "../office-document";
 
 const useStyles = makeStyles({
@@ -80,20 +81,23 @@ const useStyles = makeStyles({
   },
   finst: {
     width: "100%",
+    whiteSpace: "pre-line",
   },
 });
 
-const RangeSel: React.FC = () => {
+const CompChk: React.FC = () => {
   const connection = makeSocket();
   connection.on("message", function (msg) {
-    console.log(msg);
-    recvCode(msg);
+    // recvRangeCandidate(msg);
     setProgressOpen(false);
+    setInfos(msg["info"]);
     if (msg["status"] == "ok") {
-      feedbackDialogRestore();
-      setFeedbackOpen(true);
-    } else {
-      setFailedOpen(true);
+      // feedbackDialogRestore();
+      // setFeedbackOpen(true);
+      setInputs((prevInputs) => ({
+        ...prevInputs,
+        feedbackMsg: msg["reply"],
+      }));
     }
   });
   console.log(connection);
@@ -108,9 +112,10 @@ const RangeSel: React.FC = () => {
     furtherInst: false,
   });
 
+  const [infos, setInfos] = React.useState([]);
+
   const [progressOpen, setProgressOpen] = React.useState(false);
   const [feedbackOpen, setFeedbackOpen] = React.useState(false);
-  const [failedOpen, setFailedOpen] = React.useState(false);
   const feedbackDialogRestore = () => {
     setInputs((prevInputs) => ({
       ...prevInputs,
@@ -138,19 +143,17 @@ const RangeSel: React.FC = () => {
 
   const handleSubmit = async () => {
     var msg = {
-      type: "range_sel",
+      type: "formula_chk",
       inputRange: inputs.inputRange,
-      outputRange: inputs.outputRange,
       description: inputs.description,
       feedbackMsg: inputs.feedbackMsg,
-      inputData: await getRangeData(inputs.inputRange),
+      inputData: await getRangeFormula(inputs.inputRange),
       outputData: await getRangeData(inputs.outputRange),
     };
     connection.emit("message", msg);
     setProgressOpen(true);
 
     console.log("submitted!", msg);
-    console.log(inputs.inputRange, await getRangeData(inputs.inputRange));
   };
 
   const handleFeedback = async () => {
@@ -169,38 +172,22 @@ const RangeSel: React.FC = () => {
     <div className={styles.textPromptAndInsertion}>
       <Breadcrumb aria-label="Breadcrumb default example">
         <BreadcrumbItem>
-          <BreadcrumbButton icon={<BookToolboxRegular />}>Range Filter</BreadcrumbButton>
+          <BreadcrumbButton icon={<BookToolboxRegular />}>Compatibility Check</BreadcrumbButton>
         </BreadcrumbItem>
       </Breadcrumb>
       <Card className={styles.cardStyle}>
         <CardHeader
           header={
             <Body1>
-              <b>Original Range</b>
+              <b>Cells Range</b>
             </Body1>
           }
-          description={<Caption1>Select the original range to be filtered.</Caption1>}
+          description={<Caption1>Select the formulas you want PowerSheet to perform compability check.</Caption1>}
         />
         <Label weight="semibold">{inputs.inputRange}</Label>
         <Button name="inputRange" disabled={false} size="medium" onClick={handleRetrieveRange}>
           Select Cells
         </Button>
-      </Card>
-
-      <Card className={styles.cardStyle}>
-        <CardHeader
-          header={
-            <Body1>
-              <b>Description (Optional)</b>
-            </Body1>
-          }
-          description={
-            <Caption1>
-              Write additional information that you want Ryzen AI to know, for better generation results.
-            </Caption1>
-          }
-        />
-        <Textarea size="large" name="description" value={inputs.description} onChange={handleTextChange} />
       </Card>
 
       <Field className={styles.cardStyle}>
@@ -211,9 +198,24 @@ const RangeSel: React.FC = () => {
           size="large"
           onClick={handleSubmit}
         >
-          Filter Selection
+          Check Compatibility
         </Button>
       </Field>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: "10px", width: "90%", marginBottom: "20px" }}>
+        {infos.map((info) => (
+          <MessageBar key={info["intent"]} layout="multiline" intent={info["intent"] as MessageBarIntent}>
+            <MessageBarBody>
+              <MessageBarTitle>Compatibility Info</MessageBarTitle>
+              {info["info"]}
+            </MessageBarBody>
+            <MessageBarActions>
+              <Button>Search on Web</Button>
+            </MessageBarActions>
+          </MessageBar>
+        ))}
+      </div>
+
       <Label>
         <RibbonStarFilled />
         Powered by AMD <b>Ryzen AI</b>
@@ -257,79 +259,18 @@ const RangeSel: React.FC = () => {
           <DialogBody>
             <DialogTitle>
               <LightbulbCheckmarkRegular />
-              &nbsp;Cell hightlight ready!
+              &nbsp;Formula Explanation
             </DialogTitle>
             <DialogContent>
-              <Label style={{ display: inputs.furtherInst ? "none" : "block" }}>
-                Check your worksheet to see whether it meets your goal.
-              </Label>
-              {/* <Field
-                label="Input further instruction"
-                className={styles.finst}
-                style={{ display: inputs.furtherInst ? "block" : "none" }}
-              >
-                <Textarea
-                  name="feedbackMsg"
-                  value={inputs.feedbackMsg}
-                  onChange={handleTextChange}
-                  className={styles.finst}
-                />
-              </Field> */}
+              <Label className={styles.finst}></Label>
+              {inputs.feedbackMsg}
             </DialogContent>
 
             <DialogActions>
-              {/* <Button
-                appearance="secondary"
-                onClick={() => {
-                  setInputs((prevInputs) => ({
-                    ...prevInputs,
-                    furtherInst: true,
-                  }));
-                }}
-                style={{ display: inputs.furtherInst ? "none" : "block" }}
-              >
-                Further Instruction
-              </Button> */}
               <Button
                 appearance="primary"
                 onClick={() => {
-                  if (inputs.furtherInst) {
-                    handleFeedback();
-                  }
                   setFeedbackOpen(false);
-                }}
-              >
-                {inputs.furtherInst ? "Submit" : "Accept"}
-              </Button>
-            </DialogActions>
-          </DialogBody>
-        </DialogSurface>
-      </Dialog>
-      <Dialog
-        // this controls the dialog open state
-        open={failedOpen}
-        onOpenChange={(_, data) => {
-          // it is the users responsibility to react accordingly to the open state change
-          setFailedOpen(data.open);
-        }}
-      >
-        <DialogSurface>
-          <DialogBody>
-            <DialogTitle>
-              <QuestionCircleRegular />
-              &nbsp;Oops... Ryzen AI gets a bit confused here.
-            </DialogTitle>
-            <DialogContent>
-              <Label>
-                Narrow the scope of input or output and provide a more precise description to help the model understand.
-              </Label>
-            </DialogContent>
-
-            <DialogActions>
-              <Button
-                appearance="primary"
-                onClick={() => {
-                  setFailedOpen(false);
                 }}
               >
                 Close
@@ -342,4 +283,4 @@ const RangeSel: React.FC = () => {
   );
 };
 
-export default RangeSel;
+export default CompChk;

@@ -3,6 +3,10 @@ import re
 cellPattern = re.compile(r'([A-Za-z]+)(\d+)')
 replyPattern = re.compile(r'<CELL>(.*?)</CELL>')
 codePattern = re.compile(r'<CODE>(.*?)</CODE>')
+warnPattern = re.compile(r'<WARN>(.*?)</WARN>')
+passPattern = re.compile(r'<PASS>(.*?)</PASS>')
+typePattern = re.compile(r'<TYPE>(.*?)</TYPE>')
+titlePattern = re.compile(r'<TITLE>(.*?)</TITLE>')
 
 
 def column_to_num(col: str):
@@ -93,6 +97,39 @@ class Analysis:
             f"You are required to output the one-line statement wrapped in <CODE></CODE>. Think step by step.")
         return query_str
 
+    @staticmethod
+    def gen_batchproc_query(requirement: str):
+        query_str = (
+            f"I have an variable named \"value\", and I want you to output a very simple javascript one-line expression that, the value evaluated to {requirement}."
+            f"You are required to output the one-line expression wrapped in <CODE></CODE>. Think step by step.")
+        return query_str
+
+    def gen_formula_chk_query(self):
+        query_str = (
+            "It is known that Microsoft Excel has some compatibility issue with LibreOffice Calc. "
+            "1. Functions like XLOOKUP may not be supported in LibreOffice. "
+            "2. Formulas related to date and time may be not compatible. "
+            "3. Formulas with brace {} may be not compatible."
+            "4. Formulas with \"|\" may be not compatible. "
+            f"I have a range of data with formula: {self.inputSection.data}."
+            f"I want you to output the potential compatibility problem."
+            f"You should output the problems wrapped in <WARN></WARN>."
+            f"If there are not compatibility problems, output a check passed message in <PASS></PASS>. "
+            f"Think step by step.")
+        return query_str
+
+    def gen_create_visual_query(self):
+        query_str = (
+            f"I have an Excel sheet, and a section from {self.inputSection.cellL.get_index_str()} to {self.inputSection.cellR.get_index_str()}. The content is {self.inputSection.data}. "
+            f"Now I want to create a chart, and I want you to:"
+            f"1. Select an appropriate chart type based on the data content."
+            f"2. Output a title for the chart."
+            f"You can pick one chart type from \"Line\", \"Pie\", \"Radar\", \"Waterfall\", and wrap your chart type in <TYPE></TYPE>. "
+            f"You should output the title in another <TITLE></TITLE>. "
+            f"Think step by step.")
+
+        return query_str
+
     def apply_reply(self, reply: str):
         cell_contents = replyPattern.findall(reply)
         print(cell_contents)
@@ -104,7 +141,16 @@ class Analysis:
                 index += 1
         print(cell_contents)
         return self.outputSection.data
-        pass
+
+    def apply_formula_chk(self, reply: str):
+        warns = warnPattern.findall(reply)
+        passes = passPattern.findall(reply)
+        return warns, passes
+
+    def apply_create_visual(self, reply: str):
+        title = titlePattern.findall(reply)[0]
+        type = typePattern.findall(reply)[0]
+        return title, type
 
     @staticmethod
     def apply_code(reply: str):
