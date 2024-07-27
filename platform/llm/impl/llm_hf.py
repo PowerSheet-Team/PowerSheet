@@ -87,7 +87,7 @@ class LLM_HF(LLM):
         self.model = model
         self.tokenizer = tokenizer
         self.model.eval()
-        self.cache: Optional[list[torch.FloatTensor]] = None
+        self.cache: Optional[tuple[tuple[torch.FloatTensor, torch.FloatTensor]]] = None
         self.tokens = []
         # build initial kv cache
         # https://llama.meta.com/docs/model-cards-and-prompt-formats/llama3_1/ Supported Roles
@@ -110,4 +110,4 @@ class LLM_HF(LLM):
         self.cache = outputs.past_key_values
 
     def getContext(self):
-        return Context_HF(self.model, self.tokenizer, self.cache.copy(), self.tokens.copy())
+        return Context_HF(self.model, self.tokenizer, self.cache, self.tokens.copy())
