@@ -77,11 +77,23 @@ export const recvRangeCandidate = async (msg: JSON) => {
   return null;
 };
 
-export const recvCode = async (msg: JSON) => {
+export const createVisual = async (msg: JSON) => {
   try {
     await Excel.run(async (context) => {
+      const sheet = context.workbook.worksheets.getActiveWorksheet();
       if (msg["status"] == "ok") {
-        await hightlightSelection(msg["range"], msg["code"]);
+        const range = sheet.getRange(msg["range"]);
+        const chartType: Excel.ChartType = msg["chart_type"];
+
+        console.log(chartType);
+
+        let chart = sheet.charts.add(chartType, range, Excel.ChartSeriesBy.auto);
+
+        chart.title.text = msg["title"];
+        chart.legend.position = Excel.ChartLegendPosition.right;
+        chart.legend.format.fill.setSolidColor("white");
+        chart.dataLabels.format.font.size = 15;
+        chart.dataLabels.format.font.color = "black";
       }
       await context.sync();
     });
@@ -91,7 +103,25 @@ export const recvCode = async (msg: JSON) => {
   return null;
 };
 
-export const hightlightSelection = async (area: string, stmt: string) => {
+export const recvCode = async (msg: JSON) => {
+  try {
+    await Excel.run(async (context) => {
+      if (msg["status"] == "ok") {
+        if (msg["type"] == "rangesel") {
+          await batchProcess(msg["range"], msg["code"], true);
+        } else if (msg["type"] == "batchproc") {
+          await batchProcess(msg["range"], msg["code"], false);
+        }
+      }
+      await context.sync();
+    });
+  } catch (error) {
+    console.log("Error: " + error);
+  }
+  return null;
+};
+
+export const batchProcess = async (area: string, stmt: string, isHighlight: boolean) => {
   try {
     await Excel.run(async (context) => {
       const sheet = context.workbook.worksheets.getActiveWorksheet();
@@ -127,12 +157,17 @@ export const hightlightSelection = async (area: string, stmt: string) => {
       });
 
       cellData.forEach((cell) => {
-        console.log(cell["value"], cell["value"] > 2);
-        var value = cell["value"];
-        let stmtRes = eval(stmt);
-        if (stmtRes) {
-          cell["raw"].format.fill.color = "yellow";
-          cell["raw"].format.fill.pattern = "Solid";
+        if (isHighlight) {
+          let value = cell["value"];
+          let stmtRes = eval(stmt);
+          if (stmtRes) {
+            cell["raw"].format.fill.color = "yellow";
+            cell["raw"].format.fill.pattern = "Solid";
+          }
+        } else {
+          let value = cell["value"];
+          let exp = eval(stmt);
+          cell["raw"].values = exp;
         }
       });
 

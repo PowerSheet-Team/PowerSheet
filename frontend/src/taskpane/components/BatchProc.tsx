@@ -83,7 +83,7 @@ const useStyles = makeStyles({
   },
 });
 
-const RangeSel: React.FC = () => {
+const BatchProc: React.FC = () => {
   const connection = makeSocket();
   connection.on("message", function (msg) {
     console.log(msg);
@@ -138,7 +138,7 @@ const RangeSel: React.FC = () => {
 
   const handleSubmit = async () => {
     var msg = {
-      type: "range_sel",
+      type: "batchproc",
       inputRange: inputs.inputRange,
       outputRange: inputs.outputRange,
       description: inputs.description,
@@ -169,17 +169,17 @@ const RangeSel: React.FC = () => {
     <div className={styles.textPromptAndInsertion}>
       <Breadcrumb aria-label="Breadcrumb default example">
         <BreadcrumbItem>
-          <BreadcrumbButton icon={<BookToolboxRegular />}>Range Filter</BreadcrumbButton>
+          <BreadcrumbButton icon={<BookToolboxRegular />}>Batch Process</BreadcrumbButton>
         </BreadcrumbItem>
       </Breadcrumb>
       <Card className={styles.cardStyle}>
         <CardHeader
           header={
             <Body1>
-              <b>Original Range</b>
+              <b>Processing Range</b>
             </Body1>
           }
-          description={<Caption1>Select the original range to be filtered.</Caption1>}
+          description={<Caption1>Select the range to be processed.</Caption1>}
         />
         <Label weight="semibold">{inputs.inputRange}</Label>
         <Button name="inputRange" disabled={false} size="medium" onClick={handleRetrieveRange}>
@@ -211,7 +211,7 @@ const RangeSel: React.FC = () => {
           size="large"
           onClick={handleSubmit}
         >
-          Filter Selection
+          Batch Process
         </Button>
       </Field>
       <Label>
@@ -257,7 +257,7 @@ const RangeSel: React.FC = () => {
           <DialogBody>
             <DialogTitle>
               <LightbulbCheckmarkRegular />
-              &nbsp;Cell hightlight ready!
+              &nbsp;Batch Process done!
             </DialogTitle>
             <DialogContent>
               <Label style={{ display: inputs.furtherInst ? "none" : "block" }}>
@@ -342,4 +342,4 @@ const RangeSel: React.FC = () => {
   );
 };
 
-export default RangeSel;
+export default BatchProc;
