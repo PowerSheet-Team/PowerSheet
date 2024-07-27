@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from .llm_hf import LLM_HF
-from transformers import LlamaForCausalLM, LlamaTokenizer, AutoTokenizer, DynamicCache, StoppingCriteria, MaxLengthCriteria
+from transformers import LlamaForCausalLM, AutoTokenizer
 import torch
 
 class LLM_CPU(LLM_HF):
