@@ -853,10 +853,10 @@ class LlamaFlashAttention(LlamaAttention):
         padding_mask: Optional[torch.LongTensor] = None,
         force_vanilla: Optional[bool] = False,
     ):
-        print("HiddenState: ", hidden_states.shape)
-        print("PastKeyValue: ", past_key_value[0][0].shape if past_key_value is not None else None)
-        print("Shape: ", position_ids.shape)
-        print("Content: ", position_ids)
+        # print("HiddenState: ", hidden_states.shape)
+        # print("PastKeyValue: ", past_key_value[0][0].shape if past_key_value is not None else None)
+        # print("Shape: ", position_ids.shape)
+        # print("Content: ", position_ids)
         attn_output, attn_weights_reshaped, past_key_value = self.forward_funcs[hidden_states.shape[1]]( 
                                                                         hidden_states,
                                                                         attention_mask,
