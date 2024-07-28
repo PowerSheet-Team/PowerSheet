@@ -28,11 +28,12 @@ class Context_HF(Context):
         top_p: Optional[float] = None,
     ) -> str:
         messages = [{"role": "user", "content": input}]
-        input_ids: torch.Tensor = self.tokenizer.apply_chat_template(
+        input_ids: list[int] = self.tokenizer.apply_chat_template(
             messages,
+        
             # add_generation_prompt=True,
-            use_cache = True,
         )
+        # self.tokenizer.encode()
         self.tokens += input_ids
 
         # prefix
@@ -62,8 +63,10 @@ class Context_HF(Context):
         else:
             stopping_criteria = None
         
+        print("len of tokens: ", len(self.tokens))
         outputs = self.model.generate(
             torch.tensor([self.tokens], dtype=torch.long, device=self.model.device), 
+            attention_mask=torch.ones(1, len(self.tokens), dtype=torch.long, device=self.model.device),
             eos_token_id=terminators,
             use_cache=True,
             return_dict_in_generate=True, 
@@ -77,6 +80,7 @@ class Context_HF(Context):
         )
         self.cache = outputs.past_key_values
         response = outputs.sequences[0][len(self.tokens):]
+        self.tokens = outputs.sequences[0].tolist()
         # print(outputs)
         return prefix + self.tokenizer.decode(response, skip_special_tokens=True)
 
