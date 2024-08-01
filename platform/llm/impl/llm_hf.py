@@ -6,6 +6,7 @@ from ..llm import LLM, Context
 import torch
 from transformers import LlamaForCausalLM, LlamaTokenizer, AutoTokenizer, StoppingCriteria, MaxLengthCriteria
 from transformers.modeling_outputs import CausalLMOutputWithPast
+from .perf import PerfStreamer
 
 
 class Context_HF(Context):
@@ -26,6 +27,7 @@ class Context_HF(Context):
         temperature: Optional[float] = None,
         top_k: Optional[int] = None,
         top_p: Optional[float] = None,
+        perf: bool = False
     ) -> str:
         messages = [{"role": "user", "content": input}]
         input_ids: list[int] = self.tokenizer.apply_chat_template(
@@ -76,6 +78,7 @@ class Context_HF(Context):
             temperature=temperature,
             top_p=top_p,
             top_k=top_k,
+            streamer=PerfStreamer(self.tokenizer, print_output=True) if perf else None,
             stopping_criteria=[stopping_criteria] if stopping_criteria is not None else None,
         )
         self.cache = outputs.past_key_values
