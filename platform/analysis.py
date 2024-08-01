@@ -7,6 +7,9 @@ warnPattern = re.compile(r'<WARN>(.*?)</WARN>')
 passPattern = re.compile(r'<PASS>(.*?)</PASS>')
 typePattern = re.compile(r'<TYPE>(.*?)</TYPE>')
 titlePattern = re.compile(r'<TITLE>(.*?)</TITLE>')
+formulaList = ["SUM", "AVERAGE", "COUNT", "SUBTOTAL", "MODULUS", "POWER", "CEILING", "FLOOR", "CONCATENATE", "LEN",
+               "REPLACE", "SUBSTITUTE", "LEFT", "RIGHT", "MID", "UPPER", "LOWER", "PROPER", "TIME", "VLOOKUP",
+               "COUNTIF", "SUMIF"]
 
 
 def column_to_num(col: str):
@@ -130,13 +133,17 @@ class Analysis:
 
         return query_str
 
-    def apply_reply(self, reply: str):
+    def apply_reply(self, reply: str, forceFormula: bool = False):
         cell_contents = replyPattern.findall(reply)
         print(cell_contents)
         index = 0
         print(self.outputSection.data)
         for col in range(len(self.outputSection.data)):
             for row in range(len(self.outputSection.data[col])):
+                if forceFormula or any(substr in self.outputSection.data[col] for substr in formulaList):
+                    if cell_contents[index][0] != '=':
+                        cell_contents[index] = f"={cell_contents[index]}"
+
                 self.outputSection.data[col][row] = cell_contents[index]
                 index += 1
         print(cell_contents)

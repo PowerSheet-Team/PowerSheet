@@ -1,24 +1,40 @@
 from flask import Flask, render_template
 from flask_socketio import SocketIO
 from analysis import Analysis
-from llm.impl import llm_cpu, llm_api
+from llm.impl import llm_api
 
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins='*')
 
 llm = llm_api.LLM_API()
 
-last_context = None
-last_analysis = None
+
+class ContextManager:
+    def __init__(self):
+        self.context = None
+        self.analysis = None
+
+    def set_last_context(self, context):
+        self.context = context
+
+    def set_last_analysis(self, analysis):
+        self.analysis = analysis
+
+    def get_last_context(self):
+        return self.context
+
+    def get_last_analysis(self):
+        return self.analysis
+
+
+context_manager = ContextManager()
 
 
 def handle_autofill(msg):
-    global last_context
-    global last_analysis
     analysis = Analysis(msg)
     context = llm.getContext()
-    last_context = context
-    last_analysis = analysis
+    context_manager.set_last_context(context)
+    context_manager.set_last_analysis(analysis)
     print(analysis.gen_query())
     reply = context.query(analysis.gen_query())
     print(reply)
@@ -35,8 +51,8 @@ def handle_autofill(msg):
 
 
 def handle_feedback(msg):
-    context = last_context
-    analysis = last_analysis
+    context = context_manager.get_last_context()
+    analysis = context_manager.get_last_analysis()
     reply = context.query(f"No I does not mean that, I want " + msg["feedbackMsg"])
     print(reply)
     cell_candidate = analysis.apply_reply(reply)
@@ -69,12 +85,10 @@ def handle_rangesel(msg):
 
 
 def handle_summary(msg):
-    global last_context
-    global last_analysis
     analysis = Analysis(msg)
     context = llm.getContext()
-    last_context = context
-    last_analysis = analysis
+    context_manager.set_last_context(context)
+    context_manager.set_last_analysis(analysis)
     print(analysis.gen_summary_query())
     reply = context.query(analysis.gen_summary_query())
     print(reply)
@@ -89,12 +103,10 @@ def handle_summary(msg):
 
 
 def handle_formula_exp(msg):
-    global last_context
-    global last_analysis
     analysis = Analysis(msg)
     context = llm.getContext()
-    last_context = context
-    last_analysis = analysis
+    context_manager.set_last_context(context)
+    context_manager.set_last_analysis(analysis)
     print(analysis.gen_exp_explain_query())
     reply = context.query(analysis.gen_exp_explain_query())
     print(reply)
@@ -126,12 +138,10 @@ def handle_batchproc(msg):
 
 
 def handle_formula_pbe(msg):
-    global last_context
-    global last_analysis
     analysis = Analysis(msg)
     context = llm.getContext()
-    last_context = context
-    last_analysis = analysis
+    context_manager.set_last_context(context)
+    context_manager.set_last_analysis(analysis)
     print(analysis.gen_query())
     reply = context.query(analysis.gen_formula_pbe_query())
     print(reply)
@@ -188,7 +198,6 @@ def handle_formula_chk(msg):
 
 @socketio.on('message')
 def handle_message(msg):
-    global last_context
     print('Received message: ', msg)
     if msg["type"] == "fill":
         handle_autofill(msg)
