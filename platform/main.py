@@ -1,12 +1,24 @@
 from flask import Flask, render_template
 from flask_socketio import SocketIO
 from analysis import Analysis
-from llm.impl import llm_api
+import psutil
+import torch
+
 
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins='*')
 
-llm = llm_api.LLM_API()
+
+from llm import LLM_NPU, LLM_CPU
+from llm_models import HF_LLAMA_3_8B_INSTRUCT, Q_LLAMA_3_8B_INSTRUCT
+
+torch.set_num_threads(16)
+psutil.Process().cpu_affinity(range(0, 16))
+
+SYSTEM_PROMPT = "You will be working with Excel Sheets. You should output the content of each cell, in column-major order, one line for a single cell. WRAP THE CELL CONTENT in <CELL></CELL> and only wrap them ONCE. You are expected to output at least 1 lines. You are encouraged to use formula if it is appliable. You should only generate one possible solution, and only output ONCE for each cell in <CELL></CELL>. Don't output the additional evaluated result of formulas."
+llm = LLM_NPU(HF_LLAMA_3_8B_INSTRUCT, Q_LLAMA_3_8B_INSTRUCT, SYSTEM_PROMPT)
+# llm = LLM_CPU(HF_LLAMA_3_8B_INSTRUCT, SYSTEM_PROMPT,16)
+
 
 
 class ContextManager:
@@ -36,7 +48,7 @@ def handle_autofill(msg):
     context_manager.set_last_context(context)
     context_manager.set_last_analysis(analysis)
     print(analysis.gen_query())
-    reply = context.query(analysis.gen_query())
+    reply = context.query(analysis.gen_query(), prefix="<CELL>")
     print(reply)
     cell_candidate = analysis.apply_reply(reply)
     reply = {
@@ -53,7 +65,7 @@ def handle_autofill(msg):
 def handle_feedback(msg):
     context = context_manager.get_last_context()
     analysis = context_manager.get_last_analysis()
-    reply = context.query(f"No I does not mean that, I want " + msg["feedbackMsg"])
+    reply = context.query(f"No I does not mean that, I want " + msg["feedbackMsg"], prefix="<CELL>")
     print(reply)
     cell_candidate = analysis.apply_reply(reply)
     reply = {
@@ -70,7 +82,7 @@ def handle_feedback(msg):
 def handle_rangesel(msg):
     context = llm.getContext()
     query = Analysis.gen_range_sel_query(msg["description"])
-    reply = context.query(query)
+    reply = context.query(query, prefix="<CODE>", early_stopping=lambda s: '</CODE>' in s)
     print(reply)
     code = Analysis.apply_code(reply)
     print(code)
@@ -123,7 +135,7 @@ def handle_formula_exp(msg):
 def handle_batchproc(msg):
     context = llm.getContext()
     query = Analysis.gen_batchproc_query(msg["description"])
-    reply = context.query(query)
+    reply = context.query(query, prefix="<CODE>", early_stopping=lambda s: '</CODE>' in s)
     print(reply)
     code = Analysis.apply_code(reply)
     print(code)
@@ -143,7 +155,7 @@ def handle_formula_pbe(msg):
     context_manager.set_last_context(context)
     context_manager.set_last_analysis(analysis)
     print(analysis.gen_query())
-    reply = context.query(analysis.gen_formula_pbe_query())
+    reply = context.query(analysis.gen_formula_pbe_query(), prefix="<CELL>")
     print(reply)
     cell_candidate = analysis.apply_reply(reply)
     reply = {
@@ -220,4 +232,5 @@ def handle_message(msg):
 
 
 if __name__ == '__main__':
-    socketio.run(app, allow_unsafe_werkzeug=True, debug=True)
+    socketio.run(app, allow_unsafe_werkzeug=True, debug=True,use_reloader=False)
+

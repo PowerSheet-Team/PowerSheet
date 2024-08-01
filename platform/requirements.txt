@@ -1,0 +1,4 @@
+openai~=1.36.1
+Flask~=3.0.0
+psutil~=5.9.5
+flask-socketio~=5.3.6

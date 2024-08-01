@@ -178,7 +178,7 @@ const Visual: React.FC = () => {
               <b>Referencing Data</b>
             </Body1>
           }
-          description={<Caption1>Select the data that should be referenced for the summary.</Caption1>}
+          description={<Caption1>Select the data that should be referenced for the chart.</Caption1>}
         />
         <Label weight="semibold">{inputs.inputRange}</Label>
         <Button name="inputRange" disabled={false} size="medium" onClick={handleRetrieveRange}>
@@ -193,7 +193,7 @@ const Visual: React.FC = () => {
               <b>Instruction (Optional)</b>
             </Body1>
           }
-          description={<Caption1>You can instruct the model, telling it how the summary should be generated.</Caption1>}
+          description={<Caption1>You can instruct the model, telling it how the chart should be generated.</Caption1>}
         />
         <Textarea size="large" name="description" value={inputs.description} onChange={handleTextChange} />
       </Card>

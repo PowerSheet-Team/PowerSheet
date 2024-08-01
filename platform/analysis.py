@@ -10,6 +10,7 @@ titlePattern = re.compile(r'<TITLE>(.*?)</TITLE>')
 formulaList = ["SUM", "AVERAGE", "COUNT", "SUBTOTAL", "MODULUS", "POWER", "CEILING", "FLOOR", "CONCATENATE", "LEN",
                "REPLACE", "SUBSTITUTE", "LEFT", "RIGHT", "MID", "UPPER", "LOWER", "PROPER", "TIME", "VLOOKUP",
                "COUNTIF", "SUMIF"]
+chartTypes = ["Line", "Pie", "Waterfall", "Radar"]
 
 
 def column_to_num(col: str):
@@ -60,13 +61,8 @@ class Analysis:
 
     def gen_query(self):
         query_str = (
-            f"I have an Excel sheet, and a section from {self.inputSection.cellL.get_index_str()} to {self.inputSection.cellR.get_index_str()}. The content is {self.inputSection.data}. "
-            f"Now I want you to fill {self.outputSection.cellL.get_index_str()} and {self.outputSection.cellR.get_index_str()} with data or formula. I want to fill in the way that \"{self.desc}\". "
-            f"You should output the content of each cell, in column-major order, one line for a single cell. WRAP THE CELL "
-            f"CONTENT in <CELL></CELL> and only wrap them ONCE. You are expected to output at least "
-            f"{self.outputSection.width * self.outputSection.height} lines. You are encouraged to use formula if it "
-            f"is appliable. You should only generate one possible solution, and only output ONCE for each cell in "
-            f"<CELL></CELL>. Don't output the additional evaluated result of formulas. Think step by step.")
+            f"I have an Excel sheet, and a section from {self.inputSection.cellL.get_index_str()} to {self.inputSection.cellR.get_index_str()}."
+            f"Now I want you to fill {self.outputSection.cellL.get_index_str()} to {self.outputSection.cellR.get_index_str()} with data or formula. I want to fill in the way that \"{self.desc}\". ")
         return query_str
 
     def gen_summary_query(self):
@@ -124,22 +120,24 @@ class Analysis:
     def gen_create_visual_query(self):
         query_str = (
             f"I have an Excel sheet, and a section from {self.inputSection.cellL.get_index_str()} to {self.inputSection.cellR.get_index_str()}. The content is {self.inputSection.data}. "
-            f"Now I want to create a chart, and I want you to:"
+            f"Now I want to create a chart, in the way that {self.desc} and I want you to:"
             f"1. Select an appropriate chart type based on the data content."
             f"2. Output a title for the chart."
-            f"You can pick one chart type from \"Line\", \"Pie\", \"Radar\", \"Waterfall\", and wrap your chart type in <TYPE></TYPE>. "
-            f"You should output the title in another <TITLE></TITLE>. "
+            f"You can pick one chart type from \"Line\", \"Pie\", \"Radar\", \"Waterfall\", and output the chart type. "
+            f"You should output a title for the chart in another <TITLE></TITLE>. "
             f"Think step by step.")
 
         return query_str
 
     def apply_reply(self, reply: str, forceFormula: bool = False):
+        reply = reply.replace("\n", " ")
         cell_contents = replyPattern.findall(reply)
         print(cell_contents)
         index = 0
         print(self.outputSection.data)
         for col in range(len(self.outputSection.data)):
             for row in range(len(self.outputSection.data[col])):
+                cell_contents[index] = cell_contents[index].strip()
                 if forceFormula or any(substr in self.outputSection.data[col] for substr in formulaList):
                     if cell_contents[index][0] != '=':
                         cell_contents[index] = f"={cell_contents[index]}"
@@ -150,16 +148,23 @@ class Analysis:
         return self.outputSection.data
 
     def apply_formula_chk(self, reply: str):
+        reply = reply.replace("\n", " ")
         warns = warnPattern.findall(reply)
         passes = passPattern.findall(reply)
         return warns, passes
 
     def apply_create_visual(self, reply: str):
+        reply = reply.replace("\n", " ")
         title = titlePattern.findall(reply)[0]
-        type = typePattern.findall(reply)[0]
-        return title, type
+        cType = "Line"
+        for chartType in chartTypes:
+            if chartType in reply:
+                cType = chartType
+
+        return title, cType
 
     @staticmethod
     def apply_code(reply: str):
+        reply = reply.replace("\n", " ")
         code = codePattern.findall(reply)
         return code[0]
