@@ -9,7 +9,7 @@ SYSTEM_PROMPT = "You will be working with Excel Sheets. You should output the co
 USER_PROMPT1 = "I have an Excel sheet, and a section from A4 to A9. Now I want you to fill A10 with data or formula. I want to fill in the way that \"sum them up\"."
 def main():
     llm = LLM_CUDA(HF_LLAMA_3_8B_INSTRUCT, SYSTEM_PROMPT)
-    for k in range(3):
+    for k in range(10):
         ctx = llm.getContext()
         ctx.query(USER_PROMPT1, perf=k >= 1)
     PerfStreamer.report_counter()
